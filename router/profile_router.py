@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from engine.database import SessionLocal
-from table.cricketer_profile import UserProfile
+from table.tables import UserProfile
 from model.cricketer_profile_model import ProfileModel, ProfileResponse
 from typing import Annotated, List
 
