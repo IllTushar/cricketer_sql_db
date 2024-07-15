@@ -37,3 +37,14 @@ def get_all_user(db: db_Session):
     if not users:
         raise HTTPException(status_code=404, detail="Not Found!!")
     return users
+
+
+@router.get("/get-specific-player/{player_id}", status_code=status.HTTP_200_OK)
+def specific_player(player_id: int, db: db_Session):
+    data = db.query(UserProfile).filter(UserProfile.id == player_id).first()
+    if not data:
+        raise HTTPException(status_code=404, detail="Not Found!!")
+    else:
+        return {"data": data}
+
+
