@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, status, HTTPException
 from engine.database import SessionLocal
 from sqlalchemy.orm import Session
 from typing import Annotated, List
-from model.cricketer_runs import CreateRuns, RunWithName
+from model.cricketer_runs import CreateRuns, RunWithName, ODIRuns
 
 router = APIRouter()
 
@@ -52,3 +52,21 @@ def get_player_with_runs(player_id: int, db: db_Session):
 
         player_list.append(RunWithName(name=player_data.name, ODI=player.ODI, T20=player.T20, Test=player.Test))
         return player_list
+
+
+@router.get("/player-odi-runs/{runs}", response_model=List[ODIRuns], status_code=status.HTTP_200_OK)
+def player_odi(runs: int, db: db_Session):
+    players = db.query(RunTable).filter(RunTable.ODI > runs).all()
+    if not players:
+        raise HTTPException(status_code=404, detail='No players found with ODI runs greater than specified.')
+
+    players_list: List[ODIRuns] = []
+    for player in players:
+        player_data = db.query(UserProfile).filter(UserProfile.id == player.id).first()
+        if player_data:
+            players_list.append(ODIRuns(name=player_data.name, ODI=player.ODI))
+
+    return players_list
+
+
+

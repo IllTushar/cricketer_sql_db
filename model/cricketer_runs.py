@@ -23,3 +23,8 @@ class RunWithName(BaseModel):
     ODI: int
     T20: int
     Test: int
+
+
+class ODIRuns(BaseModel):
+    name: str
+    ODI: int
